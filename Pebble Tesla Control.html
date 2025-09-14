@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tesla Control Config</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: sans-serif; padding: 1em; max-width: 400px; margin: 0 auto; background-color: #f0f0f0; }
+    h1 { color: #333; }
+    .input-group { margin-bottom: 1em; }
+    label { display: block; margin-bottom: 0.25em; color: #555; }
+    input { width: 100%; padding: 0.75em; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .button { background-color: #007aff; color: white; padding: 0.75em 1.5em; border: none; border-radius: 4px; cursor: pointer; text-align: center; display: block; width: 100%; font-size: 1em; }
+    .button:hover { background-color: #0056b3; }
+    .info { font-size: 0.9em; color: #666; margin-top: 1.5em; }
+  </style>
+</head>
+<body>
+  <h1>Tesla Control Setup</h1>
+  <p class="info">Enter your Tessie API Key and your car's VIN to get started. You can find these in your Tessie account.</p>
+  
+  <div class="input-group">
+    <label for="apiKey">Tessie API Key</label>
+    <input type="text" id="apiKey" placeholder="Your Tessie API Key">
+  </div>
+  
+  <div class="input-group">
+    <label for="vin">Vehicle VIN</label>
+    <input type="text" id="vin" placeholder="Your Tesla's VIN">
+  </div>
+  
+  <div id="saveButton" class="button">Save Configuration</div>
+
+  <script>
+    // Load existing config if available
+    document.addEventListener('DOMContentLoaded', function() {
+        // A simple way to get query params to pre-fill from localStorage if needed,
+        // but for Pebble, this is mostly for initial load.
+        const existingConfig = JSON.parse(localStorage.getItem('pebble-tesla-config'));
+        if (existingConfig) {
+            document.getElementById('apiKey').value = existingConfig.apiKey || '';
+            document.getElementById('vin').value = existingConfig.vin || '';
+        }
+    });
+
+    document.getElementById('saveButton').addEventListener('click', function() {
+      var apiKey = document.getElementById('apiKey').value;
+      var vin = document.getElementById('vin').value;
+
+      var config = {
+        'apiKey': apiKey,
+        'vin': vin
+      };
+      
+      // Send the config data back to the Pebble phone app
+      var location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(config));
+      document.location = location;
+    });
+  </script>
+</body>
+</html>
